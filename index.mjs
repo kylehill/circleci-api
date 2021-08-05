@@ -18,14 +18,17 @@ const main = async () => {
 
   /*
    * Workflows can have the following statuses:
-   *   "success": The build succeeded and (for us) we pushed it to prod
-   *   "on hold": For us, the build succeeded, but we didn't push that one to prod
-   *   "failed": Some step in the build failed
-   *   "canceled": The build was manually stopped for some reason by a Trussel
+   *  - "success": The build succeeded and (for us) we pushed it to prod
+   *  - "on hold": For us, the build succeeded, but we didn't push that one to prod
+   *  - "failed": Some step in the build failed
+   *  - "canceled": The build was manually stopped for some reason by a Trussel
+   *  - "running": Still in progress
    *
-   * We want to ignore builds that were canceled for data integrity reasons.
+   * We want to ignore builds in the last two tranches for data integrity reasons.
    */
-  const uncanceledWorkflows = workflows.filter((w) => w.status !== "canceled");
+  const uncanceledWorkflows = workflows.filter(
+    (w) => !(w.status === "canceled" || w.status === "running")
+  );
   console.log(
     `Retrieved ${uncanceledWorkflows.length} (uncancelled) workflows`
   );
@@ -55,11 +58,13 @@ const main = async () => {
   const failedTests = await getAllFailedTests(integrationTestJobNumbers);
 
   // Finally, console.log out the failing tests, in order.
-  const sorted = Object.entries(failedTests).sort((a, b) => {
-    return b[1] - a[1];
+  const sorted = Object.values(failedTests).sort((a, b) => {
+    return b.count - a.count;
   });
-  sorted.map(([test, count]) => {
-    console.log(`${count.toString().padStart(5, " ")} | ${test}`);
+  sorted.map((test) => {
+    console.log(`${test.count.toString().padStart(5, " ")} | ${test.name}`);
+    console.log(`      | ${test.message}`);
+    console.log(`      |`);
   });
 };
 

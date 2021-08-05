@@ -11,10 +11,13 @@ export const getAllFailedTests = async (jobNumbers) => {
 
   const failures = testResults.flat();
   return failures.reduce((mem, test) => {
-    return {
-      ...mem,
-      [test]: (mem[test] || 0) + 1,
+    mem[test.name] = mem[test.name] || {
+      name: test.name,
+      count: 0,
+      message: test.message,
     };
+    mem[test.name].count += 1;
+    return mem;
   }, {});
 };
 
@@ -29,5 +32,8 @@ export const getFailedTests = async (id) => {
 
   return data.items
     .filter((item) => item.result === "failure")
-    .map((item) => item.name);
+    .map((item) => ({
+      name: item.name,
+      message: item.message,
+    }));
 };

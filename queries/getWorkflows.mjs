@@ -17,6 +17,10 @@ export const getWorkflows = async (id) => {
     `https://circleci.com/api/v2/pipeline/${id}/workflow`
   );
 
+  if (!data.items) {
+    return [];
+  }
+
   return data.items.map((item) => {
     return {
       id: item.id,

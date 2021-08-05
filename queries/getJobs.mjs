@@ -20,7 +20,7 @@ export const getJobs = async (id) => {
   );
 
   if (!data.items) {
-    return false;
+    return {};
   }
 
   return data.items.reduce((mem, item) => {

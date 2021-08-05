@@ -31,6 +31,12 @@ export const getPipelines = async (pageToken) => {
     }
   );
 
+  if (!data || !data.items) {
+    return {
+      results: [],
+    };
+  }
+
   return {
     results: data.items.map((item) => {
       return {
