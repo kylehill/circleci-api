@@ -2,6 +2,7 @@ import { getAllPipelines } from "./queries/getPipelines.mjs";
 import { getAllWorkflows } from "./queries/getWorkflows.mjs";
 import { getAllJobs } from "./queries/getJobs.mjs";
 import { getAllFailedTests } from "./queries/getTests.mjs";
+import env from "./env.mjs";
 
 // Nouns are confusing here and the CircleCI API documentation doesn't do a great
 // job of disambuigation, so I'll do my best to add comments on what *I* call things.
@@ -9,7 +10,7 @@ const main = async () => {
   // A "pipeline" is one of more iterations of a build chain, ideally producing a build.
   // nb: 90 days takes a _while_ to run. You might want to choose ~10 days if you're
   // just testing that this is set up correctly.
-  const pipelines = await getAllPipelines(60);
+  const pipelines = await getAllPipelines(env.days);
   console.log(`Found ${pipelines.length} pipelines`);
 
   // A "workflow" is a single iteration of a build chain. Workflows can be re-run
