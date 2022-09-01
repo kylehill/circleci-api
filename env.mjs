@@ -1,3 +1,3 @@
 export default {
-  "Circle-Token": "REPLACE_ME_WITH_PERSONAL_API_KEY",
+  "Circle-Token": "8401e8086db6ae3e3ecac41b51a9f4df1ab4b82d",
 };

@@ -9,7 +9,7 @@ const main = async () => {
   // A "pipeline" is one of more iterations of a build chain, ideally producing a build.
   // nb: 90 days takes a _while_ to run. You might want to choose ~10 days if you're
   // just testing that this is set up correctly.
-  const pipelines = await getAllPipelines(90);
+  const pipelines = await getAllPipelines(60);
   console.log(`Found ${pipelines.length} pipelines`);
 
   // A "workflow" is a single iteration of a build chain. Workflows can be re-run
@@ -43,8 +43,20 @@ const main = async () => {
   // "integration_tests" jobs in case something else failed and needed to be re-run
   const integrationTestJobNumbers = [
     ...workflowJobs.reduce((mem, job) => {
-      if (job.integration_tests.number) {
-        mem.add(job.integration_tests.number);
+      if (job.integration_tests_admin?.number) {
+        mem.add(job.integration_tests_admin.number);
+      }
+      if (job.integration_tests_milmove?.number) {
+        mem.add(job.integration_tests_milmove.number);
+      }
+      if (job.integration_tests_mtls?.number) {
+        mem.add(job.integration_tests_mtls.number);
+      }
+      if (job.integration_tests_mymove?.number) {
+        mem.add(job.integration_tests_mymove.number);
+      }
+      if (job.integration_tests_office?.number) {
+        mem.add(job.integration_tests_office.number);
       }
       return mem;
     }, new Set()),
